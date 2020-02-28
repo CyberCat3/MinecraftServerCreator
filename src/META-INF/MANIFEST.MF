@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: cybercat3.jaibel_server_creator.Main
+
