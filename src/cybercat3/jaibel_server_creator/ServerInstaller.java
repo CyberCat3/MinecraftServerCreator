@@ -333,9 +333,6 @@ public class ServerInstaller {
         InputStream is = p.getInputStream();
         InputStream err = p.getErrorStream();
 
-        p.getOutputStream().write("stop\nstop\nstop\nstop\nstop\nstop\n".getBytes());
-        p.getOutputStream().flush();
-
         new Thread(() -> {
             LinkedList<Character> lastFourCharacters = new LinkedList<>();
             LinkedList<Character> done = new LinkedList<>(Arrays.asList('D', 'o', 'n', 'e'));
@@ -351,8 +348,12 @@ public class ServerInstaller {
                         lastFourCharacters.removeFirst();
                     }
                     if (lastFourCharacters.equals(done)) {
-                        SwingUtilities.invokeLater(() -> addToConsole("Initialised Server."));
-                        SwingUtilities.invokeLater(() -> progressBar.setString("STOPPING SERVER..."));
+                        SwingUtilities.invokeLater(() -> {
+                            addToConsole("Initialised Server.");
+                            progressBar.setString("STOPPING SERVER...");
+                        });
+                        p.getOutputStream().write("stop\n".getBytes());
+                        p.getOutputStream().flush();
                     }
                 }
             } catch (IOException e) {
@@ -373,8 +374,12 @@ public class ServerInstaller {
                 lastFourCharacters.removeFirst();
             }
             if (lastFourCharacters.equals(done)) {
-                SwingUtilities.invokeLater(() -> addToConsole("Initialised Server."));
-                SwingUtilities.invokeLater(() -> progressBar.setString("STOPPING SERVER..."));
+                SwingUtilities.invokeLater(() -> {
+                    addToConsole("Initialised Server.");
+                    progressBar.setString("STOPPING SERVER...");
+                });
+                p.getOutputStream().write("stop\n".getBytes());
+                p.getOutputStream().flush();
             }
         }
         addToConsole("Stopped Server.");
